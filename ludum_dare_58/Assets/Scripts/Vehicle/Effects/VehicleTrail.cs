@@ -14,10 +14,10 @@ namespace LudumDare58.Effects
 
         void Update()
         {
-            if (Vehicle.IsGrounded != trailRenderer.emitting)
-            {
-                trailRenderer.emitting = Vehicle.IsGrounded;
-            }
+            // if (Vehicle.IsGrounded != trailRenderer.emitting)
+            // {
+            //     trailRenderer.emitting = Vehicle.IsGrounded;
+            // }
         }
     }
 }
