@@ -5,6 +5,8 @@
 [Bb]uilds/
 [Ll]ogs/
 
+*.png
+
 *.dwlt
 ludum_dare_51/UserSettings/Layouts/default-2021.dwlt
 
