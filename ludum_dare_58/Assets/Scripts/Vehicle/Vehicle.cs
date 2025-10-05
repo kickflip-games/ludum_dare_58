@@ -127,7 +127,7 @@ namespace LudumDare58
                 Rigidbody.AddForce(lateralFriction, ForceMode.Acceleration);
             }
         }
-      
+
         /// <summary>
         /// Applies the steering to the vehicle by adding rotation force
         /// </summary>
@@ -168,7 +168,7 @@ namespace LudumDare58
             {
                 Debug.Log("CANT MOVE");
                 Debug.Log($"IsGrounded: {IsGrounded}, CanMove: {CanMove}");
-             }
+            }
 
         }
 
@@ -191,7 +191,7 @@ namespace LudumDare58
             }
 
             // Automatically add a player input if no input source exists
-            if(GetComponent<VehicleInputSource>() == null)
+            if (GetComponent<VehicleInputSource>() == null)
             {
                 gameObject.AddComponent<VehiclePlayerInput>();
             }
@@ -204,5 +204,24 @@ namespace LudumDare58
         {
             groundDetection.OnDrawGizmosSelected(this);
         }
+
+        public void ResetUpright()
+        {
+            // Zero out velocity and angular velocity
+            Rigidbody.linearVelocity = Vector3.zero;
+            Rigidbody.angularVelocity = Vector3.zero;
+
+            // Smoothly rotate upright while keeping forward direction
+            Quaternion uprightRotation = Quaternion.LookRotation(transform.forward, Vector3.up);
+            Rigidbody.MoveRotation(uprightRotation);
+
+            // Optionally lift a little off the ground to avoid clipping
+            transform.position += Vector3.up * 1f;
+        }
+
+
     }
+
+
+
 }
