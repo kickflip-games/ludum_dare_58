@@ -3797,11 +3797,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &952084778 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5258304601143362737, guid: 32f57a23e09f5de4f82166c51517da71, type: 3}
-  m_PrefabInstance: {fileID: 683613210542039076}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &981183290
 GameObject:
   m_ObjectHideFlags: 0
@@ -7731,10 +7726,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5258304601143362737, guid: 32f57a23e09f5de4f82166c51517da71, type: 3}
-      insertIndex: 4
-      addedObject: {fileID: 4721442271796176031}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 32f57a23e09f5de4f82166c51517da71, type: 3}
 --- !u!1 &2445337050685779664
 GameObject:
@@ -7848,39 +7840,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5258304601143362748, guid: 32f57a23e09f5de4f82166c51517da71, type: 3}
   m_PrefabInstance: {fileID: 683613210542039076}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4721442271796176031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 952084778}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e5c7be3b2e9d864db0c18b75a1cba65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LudumDare58.VehiculeDrift
-  stats:
-    MaxSpeed: 50
-    Acceleration: 20
-    SteeringPower: 1.5
-    Grip: 1
-  physics:
-    gravity: 20
-    fallGravity: 50
-  groundDetection:
-    GroundLayers:
-      serializedVersion: 2
-      m_Bits: 4294967291
-    RaycastDist: 0.25
-  moveSpeed: 50
-  maxSpeed: 95.3
-  drag: 0.94
-  steerAngle: 5
-  traction: 0.82
-  handbrakeActionName: Handbrake
-  fallbackToSpacebar: 1
-  fallbackToReverseInput: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
