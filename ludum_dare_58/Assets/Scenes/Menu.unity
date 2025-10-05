@@ -1736,6 +1736,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3148238885775753242, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
+      propertyPath: field of view
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 3148238885775753245, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
       propertyPath: m_LocalPosition.x
       value: -78
@@ -2140,7 +2144,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Byte Trail
+  m_text: Light Runner
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2463,6 +2467,75 @@ Transform:
   - {fileID: 1718834292}
   m_Father: {fileID: 1277524609}
   m_LocalEulerAnglesHint: {x: 68, y: 0, z: 0}
+--- !u!1001 &1686663183
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -94.91
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.35
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7.96
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.87642455
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.18700725
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.43556628
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.08479629
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 14.71
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 55.3
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 18.79
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
+      propertyPath: m_Name
+      value: Moto_TRON_lowpoly
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 60acf7aedb0a648e08e177c150ef895d, type: 3}
 --- !u!1 &1718834291
 GameObject:
   m_ObjectHideFlags: 3
@@ -2562,6 +2635,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a143135be3953454fb2e8716b4dc1b0e, type: 3}
       propertyPath: m_Name
       value: Vehicle
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a143135be3953454fb2e8716b4dc1b0e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2978,3 +3055,4 @@ SceneRoots:
   - {fileID: 5258304600424083692}
   - {fileID: 915821858}
   - {fileID: 676545571}
+  - {fileID: 1686663183}
