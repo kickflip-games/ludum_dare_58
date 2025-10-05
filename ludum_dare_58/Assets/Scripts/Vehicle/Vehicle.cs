@@ -88,6 +88,7 @@ namespace LudumDare58
         /// </summary>
         protected virtual void CollectInput()
         {
+
             inputManager.CollectInput();
         }
 
@@ -153,12 +154,22 @@ namespace LudumDare58
         /// </summary>
         protected virtual void ApplyAcceleration()
         {
+
+
+
             if (IsGrounded && CanMove)
             {
                 var force = FinalStats.Acceleration * Input.y;
 
                 Rigidbody.AddForce(transform.forward * force, ForceMode.Acceleration);
             }
+            // Limit the max speed of the vehicle
+            else
+            {
+                Debug.Log("CANT MOVE");
+                Debug.Log($"IsGrounded: {IsGrounded}, CanMove: {CanMove}");
+             }
+
         }
 
         /// <summary>

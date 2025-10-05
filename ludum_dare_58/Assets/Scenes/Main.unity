@@ -1127,6 +1127,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 237730939}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &255046417
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 255046418}
+  m_Layer: 0
+  m_Name: Ramps
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &255046418
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 255046417}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 536838306}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &264881901
 GameObject:
   m_ObjectHideFlags: 0
@@ -2309,6 +2340,7 @@ Transform:
   - {fileID: 202230850}
   - {fileID: 559246138}
   - {fileID: 745265668}
+  - {fileID: 255046418}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &542032988
@@ -4181,50 +4213,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3148238885775753242, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
-      propertyPath: field of view
-      value: 36.057144
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148238885775753242, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148238885775753242, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148238885775753242, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148238885775753245, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -57.51786
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148238885775753245, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 55.686543
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148238885775753245, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -244.02148
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148238885775753245, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.87728935
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148238885775753245, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.33412734
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148238885775753245, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.32199752
-      objectReference: {fileID: 0}
-    - target: {fileID: 3148238885775753245, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.122637026
-      objectReference: {fileID: 0}
     - target: {fileID: 4357519437633950667, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
       propertyPath: m_LocalPosition.x
       value: -47.827774
@@ -4464,11 +4452,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &952084778 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5258304601143362737, guid: 32f57a23e09f5de4f82166c51517da71, type: 3}
-  m_PrefabInstance: {fileID: 683613210542039076}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &981183290
 GameObject:
   m_ObjectHideFlags: 0
@@ -8871,6 +8854,10 @@ PrefabInstance:
       propertyPath: stats.Grip
       value: 0.08
       objectReference: {fileID: 0}
+    - target: {fileID: 5258304601143362738, guid: 32f57a23e09f5de4f82166c51517da71, type: 3}
+      propertyPath: groundDetection.GroundLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5258304601143362748, guid: 32f57a23e09f5de4f82166c51517da71, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -8922,10 +8909,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5258304601143362737, guid: 32f57a23e09f5de4f82166c51517da71, type: 3}
-      insertIndex: 4
-      addedObject: {fileID: 4721442271796176031}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 32f57a23e09f5de4f82166c51517da71, type: 3}
 --- !u!1 &2445337050685779664
 GameObject:
@@ -9055,39 +9039,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5258304601143362748, guid: 32f57a23e09f5de4f82166c51517da71, type: 3}
   m_PrefabInstance: {fileID: 683613210542039076}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4721442271796176031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 952084778}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e5c7be3b2e9d864db0c18b75a1cba65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LudumDare58.VehiculeDrift
-  stats:
-    MaxSpeed: 50
-    Acceleration: 20
-    SteeringPower: 1.5
-    Grip: 1
-  physics:
-    gravity: 20
-    fallGravity: 50
-  groundDetection:
-    GroundLayers:
-      serializedVersion: 2
-      m_Bits: 115
-    RaycastDist: 0.25
-  moveSpeed: 50
-  maxSpeed: 95.3
-  drag: 0.94
-  steerAngle: 5
-  traction: 0.82
-  handbrakeActionName: Handbrake
-  fallbackToSpacebar: 1
-  fallbackToReverseInput: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

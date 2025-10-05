@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f3559c1774faf45bf938ead83c3a2a74
+guid: 92cbadf4118c44c7d83a8a03aa3697a0
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -7,63 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: colormap.005
-    second: {fileID: 2100000, guid: a77279725884b48e1ab6c8d3c189ef00, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: colormap.007
-    second: {fileID: 2100000, guid: 3727da6140d154a19b3a82443e50ee9a, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: colormap.008
-    second: {fileID: 2100000, guid: 94a4c01e424ff458a97b2f7d13b2f8fb, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: colormap.009
-    second: {fileID: 2100000, guid: e213bc47dd0e54c9093abbb6643e0d41, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: colormap.010
-    second: {fileID: 2100000, guid: db54203c195c4483494c2e16cef3f990, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: colormap.012
-    second: {fileID: 2100000, guid: 09d8d1db27da14c4e833f7316fa296f2, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: colormap.013
-    second: {fileID: 2100000, guid: 52cb9bc7b79234456a56d802222f78fd, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: colormap.014
-    second: {fileID: 2100000, guid: a5f25881cf242408d871191b0587da3e, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: colormap.015
-    second: {fileID: 2100000, guid: b0241f89702204cf79021582c42d9b22, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: colormap.017
-    second: {fileID: 2100000, guid: b3da40885d8cc42ccbe74851eb063856, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: colormap.018
-    second: {fileID: 2100000, guid: 17a3ccd93f3f740e79b944b72d49a7ce, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: colormap.019
-    second: {fileID: 2100000, guid: 83ce5b7ec0f924a25b6b6fa557fbf703, type: 2}
+      name: colormap
+    second: {fileID: 2100000, guid: 580f9ce4b86124a9083aedc51a74357c, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
