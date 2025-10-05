@@ -1,57 +1,3 @@
-/*
-🧠 Setup Guide
-1. Create a “Trails” Layer
-
-Go to Edit → Project Settings → Tags & Layers → Layers
-
-Add a new layer called Trails
-
-Assign your TrailRenderer objects to that layer.
-
-2. Add a Dedicated Capture Camera
-
-Duplicate your main camera or create a new one.
-
-Set its Culling Mask to only include Trails.
-
-Set the Clear Flags to Solid Color and Background Color to transparent.
-
-Uncheck Audio Listener and any scripts you don’t need.
-
-3. Attach the Script
-
-Create an empty GameObject, name it TrailCaptureManager.
-
-Attach TrailCapture.cs.
-
-Assign your capture camera to the trailCamera field.
-
-(Optional) Add a UI Button and drag it into the captureButton field.
-
-(Optional) Add a RawImage to show a live preview of the captured trails.
-
-🌐 WebGL Notes
-
-To make downloads work in WebGL, add this small JS plugin:
-
-🧩 File: Assets/Plugins/DownloadImage.jslib
-mergeInto(LibraryManager.library, {
-  DownloadImage: function (base64DataPtr, filenamePtr) {
-    var base64Data = UTF8ToString(base64DataPtr);
-    var filename = UTF8ToString(filenamePtr);
-    var a = document.createElement("a");
-    a.href = "data:image/png;base64," + base64Data;
-    a.download = filename;
-    a.click();
-  }
-});
-
-
-✅ Works seamlessly in browsers — it will trigger a “Save File” dialog for your PNG.
-
-
-*/
-
 using System;
 using System.Collections;
 using System.IO;
@@ -65,36 +11,44 @@ using System.Runtime.InteropServices;
 public class TrailCapture : MonoBehaviour
 {
     [Header("References")]
-    [Tooltip("Camera that only renders trails (set its Culling Mask to 'Trails')")]
+    [Tooltip("Camera that only renders trails (can stay disabled in Hierarchy)")]
     public Camera trailCamera;
 
     [Header("Capture Settings")]
     public int captureWidth = 1024;
     public int captureHeight = 1024;
-    public Color backgroundColor = new Color(0, 0, 0, 0); // transparent
+    public Color backgroundColor = new Color(0, 0, 0, 0);
     public bool transparentBackground = true;
 
     [Header("UI (optional)")]
     public Button captureButton;
-    public RawImage previewImage; // optional in-game preview
+    public RawImage previewImage;
 
 #if UNITY_WEBGL
     [DllImport("__Internal")]
     private static extern void DownloadImage(string base64Data, string filename);
 #endif
 
-    void Start()
+    private void Start()
     {
+        // Auto-find camera if not assigned
+        if (trailCamera == null)
+            trailCamera = GetComponentInChildren<Camera>();
+
         if (trailCamera == null)
         {
-            Debug.LogError("[TrailCapture] Please assign a camera!");
+            Debug.LogError("[TrailCapture] No trail camera found in children!");
             return;
         }
 
+        // Configure the capture camera (off-screen only)
         trailCamera.clearFlags = CameraClearFlags.SolidColor;
         trailCamera.backgroundColor = backgroundColor;
 
-        if (captureButton)
+        // Make sure it's disabled so it never renders to screen
+        trailCamera.enabled = false;
+
+        if (captureButton != null)
             captureButton.onClick.AddListener(CaptureAndSave);
     }
 
@@ -105,21 +59,39 @@ public class TrailCapture : MonoBehaviour
 
     private IEnumerator CaptureRoutine()
     {
-        yield return new WaitForEndOfFrame(); // wait for trails to render
+        // Wait for the end of the frame so trails are fully updated
+        yield return new WaitForEndOfFrame();
 
-        RenderTexture rt = new RenderTexture(captureWidth, captureHeight, 24, RenderTextureFormat.ARGB32);
+        // Create a temporary render texture
+        RenderTexture rt = new RenderTexture(
+            captureWidth,
+            captureHeight,
+            24,
+            RenderTextureFormat.ARGB32
+        );
+
+        // Backup existing settings
+        var prevTarget = trailCamera.targetTexture;
+        var prevActive = RenderTexture.active;
+
         trailCamera.targetTexture = rt;
+
+        // Render off-screen (camera can be disabled)
         trailCamera.Render();
 
+        // Read pixels from the RenderTexture
         RenderTexture.active = rt;
         Texture2D tex = new Texture2D(captureWidth, captureHeight, TextureFormat.RGBA32, false);
         tex.ReadPixels(new Rect(0, 0, captureWidth, captureHeight), 0, 0);
         tex.Apply();
 
-        trailCamera.targetTexture = null;
-        RenderTexture.active = null;
+        // Restore
+        trailCamera.targetTexture = prevTarget;
+        RenderTexture.active = prevActive;
+        rt.Release();
         Destroy(rt);
 
+        // Encode to PNG
         byte[] pngData = tex.EncodeToPNG();
 
         // Optional preview in UI
