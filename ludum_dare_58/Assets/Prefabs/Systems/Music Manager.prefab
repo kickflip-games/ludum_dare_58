@@ -24,13 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5528888395492215528}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7567541697552672720
 MonoBehaviour:
@@ -44,7 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bff93f88955f7c4cb1a06cab5316da8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioMixerGroup: {fileID: -4766610084303197953, guid: 57fecff18d40d214d9c2e9f1922430f7,
-    type: 2}
-  backgroundMusic: {fileID: 8300000, guid: 2c982d08f0517214aa7c73ee1e4150cd, type: 3}
+  audioMixerGroup: {fileID: -4766610084303197953, guid: 57fecff18d40d214d9c2e9f1922430f7, type: 2}
+  backgroundMusic: {fileID: 8300000, guid: cc7e8e9c453674821847d67fcad750dd, type: 3}
   playOnAwake: 1
+  postProcessVolume: {fileID: 0}
+  baseIntensity: 6.5
+  maxIntensity: 50
+  decaySpeed: 8
+  beatSensitivity: 0.2
+  minBeatInterval: 0.9
+  sampleSize: 512
+  fftWindow: 5
+  enableColorPulse: 1
+  chromaticMax: 0.6
+  hueShiftSpeed: 0.5

@@ -132,7 +132,7 @@ namespace LudumDare58.Game
         {
             float duration = 0.3f;
             float t = 0f;
-            Vector3 baseScale = textTransform.localScale;
+            Vector3 baseScale = Vector3.one;
 
             while (t < duration)
             {
@@ -142,7 +142,7 @@ namespace LudumDare58.Game
                 yield return null;
             }
 
-            textTransform.localScale = baseScale;
+            textTransform.localScale = Vector3.one;
         }
     }
 }
