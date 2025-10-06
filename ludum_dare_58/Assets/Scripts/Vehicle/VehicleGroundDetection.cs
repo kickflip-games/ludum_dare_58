@@ -11,6 +11,15 @@ namespace LudumDare58
         [Tooltip("How far to raycast when checking for ground")]
         public float RaycastDist = 0.25f;
 
+        [Tooltip("Offset from center to front raycast point")]
+        public float FrontOffset = 1.5f;
+
+        [Tooltip("Offset from center to back raycast point")]
+        public float BackOffset = 1.5f;
+
+        [Tooltip("Offset from center to side raycast points")]
+        public float SideOffset = 0.75f;
+
         Vehicle vehicle;
 
         /// <summary>
@@ -28,15 +37,32 @@ namespace LudumDare58
         /// </summary>
         public void CheckGround()
         {
-            // Create a ray pointing downwards (relative to the vehicle)
-            Ray ray = new Ray(vehicle.transform.position, -vehicle.transform.up);
+            IsGrounded = false;
 
-            // If the ray hits a ground layer, the vehicle is grounded, otherwise not
-            IsGrounded = Physics.Raycast(ray, RaycastDist, GroundLayers);
+            // Define raycast points (front-left, front-right, back-left, back-right, center)
+            Vector3[] raycastPoints = new Vector3[]
+            {
+                vehicle.transform.position + vehicle.transform.forward * FrontOffset + vehicle.transform.right * SideOffset,   // Front-right
+                vehicle.transform.position + vehicle.transform.forward * FrontOffset - vehicle.transform.right * SideOffset,   // Front-left
+                vehicle.transform.position - vehicle.transform.forward * BackOffset + vehicle.transform.right * SideOffset,    // Back-right
+                vehicle.transform.position - vehicle.transform.forward * BackOffset - vehicle.transform.right * SideOffset,    // Back-left
+                vehicle.transform.position  // Center
+            };
+
+            // Check each raycast point - if ANY hit ground, vehicle is grounded
+            foreach (Vector3 point in raycastPoints)
+            {
+                Ray ray = new Ray(point, -vehicle.transform.up);
+                if (Physics.Raycast(ray, RaycastDist, GroundLayers))
+                {
+                    IsGrounded = true;
+                    break; // No need to check remaining points
+                }
+            }
         }
 
         /// <summary>
-        /// Draws a ray for debugging purposes (only in editor)
+        /// Draws rays for debugging purposes (only in editor)
         /// </summary>
         public void OnDrawGizmosSelected(Vehicle vehicle)
         {
@@ -44,7 +70,20 @@ namespace LudumDare58
             var direction = -vehicle.transform.up;
             var length = RaycastDist;
 
-            Debug.DrawRay(vehicle.transform.position, direction * length, Color.magenta);
+            // Draw all raycast points
+            Vector3[] raycastPoints = new Vector3[]
+            {
+                vehicle.transform.position + vehicle.transform.forward * FrontOffset + vehicle.transform.right * SideOffset,
+                vehicle.transform.position + vehicle.transform.forward * FrontOffset - vehicle.transform.right * SideOffset,
+                vehicle.transform.position - vehicle.transform.forward * BackOffset + vehicle.transform.right * SideOffset,
+                vehicle.transform.position - vehicle.transform.forward * BackOffset - vehicle.transform.right * SideOffset,
+                vehicle.transform.position
+            };
+
+            foreach (Vector3 point in raycastPoints)
+            {
+                Debug.DrawRay(point, direction * length, Color.magenta);
+            }
 #endif
         }
     }

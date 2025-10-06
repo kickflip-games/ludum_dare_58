@@ -107,8 +107,8 @@ namespace LudumDare58.Audio
                 colorAdj.hueShift.value = Mathf.Sin(Time.time * hueShiftSpeed) * 30f;
 
             frameCounter++;
-            if (frameCounter % 15 == 0)
-                Debug.Log($"[MusicManager] Bass Energy: {energy:E4} | Prev: {prevEnergy:E4}");
+            // if (frameCounter % 15 == 0)
+            //     Debug.Log($"[MusicManager] Bass Energy: {energy:E4} | Prev: {prevEnergy:E4}");
         }
 
         private void TriggerBloomPulse(float energy)
@@ -121,7 +121,7 @@ namespace LudumDare58.Audio
                 StartCoroutine(ChromaticKick());
 
             StartCoroutine(BloomKick());
-            Debug.Log($"💥 Beat detected! Energy={energy:F5}, Bloom={target:F2}");
+            // Debug.Log($"💥 Beat detected! Energy={energy:F5}, Bloom={target:F2}");
         }
 
         private IEnumerator BloomKick()

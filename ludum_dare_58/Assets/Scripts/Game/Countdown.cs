@@ -55,7 +55,7 @@ namespace LudumDare58.Game
         {
             TimeSpan timeSpan = TimeSpan.FromSeconds(time);
 
-            text.text = timeSpan.ToString("mm\\:ss\\:ff");
+            text.text = timeSpan.ToString("mm\\:ss");
         }
     }
 }

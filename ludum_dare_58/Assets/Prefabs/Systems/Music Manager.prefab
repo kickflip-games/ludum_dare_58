@@ -48,8 +48,13 @@ MonoBehaviour:
   backgroundMusic: {fileID: 8300000, guid: cc7e8e9c453674821847d67fcad750dd, type: 3}
   playOnAwake: 1
   postProcessVolume: {fileID: 0}
-  baseIntensity: 1
-  maxIntensity: 5
-  sensitivity: 5
+  baseIntensity: 6.5
+  maxIntensity: 50
+  decaySpeed: 8
+  beatSensitivity: 0.2
+  minBeatInterval: 0.9
   sampleSize: 512
   fftWindow: 5
+  enableColorPulse: 1
+  chromaticMax: 0.6
+  hueShiftSpeed: 0.5

@@ -1,187 +1,234 @@
 ﻿using LudumDare58.Input;
 using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 namespace LudumDare58
 {
     public class Vehicle : MonoBehaviour
     {
-        [SerializeField]
-        VehicleStats stats = new VehicleStats();
+        [Header("Vehicle Core")]
+        [SerializeField] VehicleStats stats = new VehicleStats();
+        [SerializeField] VehiclePhysics physics = new VehiclePhysics();
+        [SerializeField] VehicleGroundDetection groundDetection = new VehicleGroundDetection();
 
-        [SerializeField]
-        VehiclePhysics physics = new VehiclePhysics();
-
-        [SerializeField]
-        VehicleGroundDetection groundDetection = new VehicleGroundDetection();
-
-        /// <summary>
-        /// The input manager collects the input from all input sources, which are on the vehicle
-        /// </summary>
         VehicleInputManager inputManager = new VehicleInputManager();
 
-        /// <summary>
-        /// Gets the stts of the vehicle after all powerUps have been applied to its base stats
-        /// </summary>
         public VehicleStats FinalStats => stats;
-
-        /// <summary>
-        /// Gets the rigidbody of the vehicle
-        /// </summary>
         public Rigidbody Rigidbody { get; private set; }
-
-        /// <summary>
-        /// Gets the input applied to the vehicle
-        /// </summary>
         public Vector2 Input => inputManager.Input;
-
-        /// <summary>
-        /// Returns whether the vehicle is grounded or not
-        /// </summary>
         public bool IsGrounded => groundDetection.IsGrounded;
-
-        /// <summary>
-        /// Returns whether the vehicle is allowed to move or not
-        /// </summary>
         public bool CanMove { get; set; } = true;
-
-        /// <summary>
-        /// The amount of the vehicles velocity going forward
-        /// </summary>
         public float ForwardSpeed => Vector3.Dot(Rigidbody.linearVelocity, transform.forward);
 
-        /// <summary>
-        /// Returns the forward speed relative to the vehicles max speed. The returned value is in range [-1, 1] 
-        /// </summary>
-        public float NormalizedForwardSpeed
-        {
-            get => (Mathf.Abs(ForwardSpeed) > 0.1f) ? ForwardSpeed / FinalStats.MaxSpeed : 0.0f;
-        }
+        public float NormalizedForwardSpeed =>
+            (Mathf.Abs(ForwardSpeed) > 0.1f) ? ForwardSpeed / FinalStats.MaxSpeed : 0.0f;
+
+        // ---------------------------
+        // Drift / Handbrake settings
+        // ---------------------------
+        [Header("Drift Dynamics")]
+        [SerializeField] float driftMoveSpeed = 50f;
+        [SerializeField] float driftMaxSpeed = 15f;
+        [Range(0.5f, 1f)][SerializeField] float driftDrag = 0.98f;
+        [SerializeField] float driftSteerAngle = 20f;
+        [SerializeField] float driftTraction = 1f;
+
+        [Header("Handbrake Input")]
+        [SerializeField] string handbrakeActionName = "Handbrake";
+        [SerializeField] bool fallbackToSpacebar = true;
+        [SerializeField] bool fallbackToReverseInput = true;
+
+        Vector3 driftVelocity;
+        bool isDrifting;
+        bool wasDrifting;
+
+        // ---------------------------
+        // Auto Upright / Unstuck logic
+        // ---------------------------
+        [Header("Stuck / Flip Auto-Reset")]
+        [SerializeField] float stuckVelocityThreshold = 0.5f;   // m/s below which car may be stuck
+        [SerializeField] float stuckTimeThreshold = 3f;         // seconds before we auto-reset
+        [SerializeField] float flipDotThreshold = 0.3f;         // how "upside down" we allow
+        [SerializeField] float resetCooldown = 5f;              // minimum seconds between resets
+
+        float stuckTimer = 0f;
+        float lastResetTime = -10f;
+
+
+
+#if ENABLE_INPUT_SYSTEM
+        PlayerInput playerInput;
+        InputAction handbrakeAction;
+#endif
 
         void Awake()
         {
             Rigidbody = GetComponent<Rigidbody>();
-
             inputManager.Initialize(this);
             groundDetection.Initialize(this);
         }
 
-        /// <summary>
-        /// Apply lateral friction, steering and acceleration
-        /// </summary>
         protected virtual void FixedUpdate()
         {
             CollectInput();
-
             PerformGroundCheck();
-
             ApplyGravity();
+            CheckFlipAndStuck();
 
-            ApplyLateralFriction();
+            // Handle drift input state
+            isDrifting = EvaluateDriftState(Input);
 
-            ApplySteering();
+            if (!isDrifting)
+            {
+                // Normal vehicle physics
+                SyncDriftVelocityWithRigidbody();
+                wasDrifting = false;
 
-            ApplyAcceleration();
+                ApplyLateralFriction();
+                ApplySteering();
+                ApplyAcceleration();
+                return;
+            }
+
+            // Begin drift mode if just entered
+            if (!wasDrifting)
+            {
+                driftVelocity = GetPlanarVelocity(Rigidbody.linearVelocity);
+                wasDrifting = true;
+            }
+
+            ApplyDriftPhysics(Input);
+
+
+
         }
 
-        /// <summary>
-        /// Collect the input from all input sources
-        /// </summary>
-        protected virtual void CollectInput()
-        {
+        // ---------------------------
+        // Core Vehicle Behavior
+        // ---------------------------
+        protected virtual void CollectInput() => inputManager.CollectInput();
+        protected virtual void PerformGroundCheck() => groundDetection.CheckGround();
 
-            inputManager.CollectInput();
-        }
-
-        /// <summary>
-        /// Checks whether the vehicle is grounded or not
-        /// </summary>
-        protected virtual void PerformGroundCheck()
-        {
-            groundDetection.CheckGround();
-        }
-
-        /// <summary>
-        /// Applies gravity to the vehicle
-        /// </summary>
         protected virtual void ApplyGravity()
         {
             float factor = groundDetection.IsGrounded ? physics.Gravity : physics.FallGravity;
-
             Rigidbody.AddForce(-factor * Vector3.up, ForceMode.Acceleration);
         }
 
-        /// <summary>
-        /// Applies side friction to the vehicle. 
-        /// The amount of added force defines how much the vehicle drifts while turning.
-        /// </summary>
         protected virtual void ApplyLateralFriction()
         {
             if (IsGrounded)
             {
-                // Calculate how much the vehicle is moving left or right
                 float lateralSpeed = Vector3.Dot(Rigidbody.linearVelocity, transform.right);
-
-                //Calculate the desired amount of friction to apply to the side of the vehicle.
                 Vector3 lateralFriction = -transform.right * (lateralSpeed / Time.fixedDeltaTime) * FinalStats.Grip;
-
                 Rigidbody.AddForce(lateralFriction, ForceMode.Acceleration);
             }
         }
 
-        /// <summary>
-        /// Applies the steering to the vehicle by adding rotation force
-        /// </summary>
         protected virtual void ApplySteering()
         {
             if (IsGrounded && CanMove)
             {
                 float steeringPower = Input.x * FinalStats.SteeringPower;
-
-                // The vehicle should only rotate if it is actually moving forward or backwards, therefore we
-                // will multiply it by the forward speed and a coefficient
                 float speedFactor = ForwardSpeed * 0.075f;
-
                 steeringPower = Mathf.Clamp(steeringPower * speedFactor, -FinalStats.SteeringPower, FinalStats.SteeringPower);
-
                 float rotationTorque = steeringPower - Rigidbody.angularVelocity.y;
-
                 Rigidbody.AddRelativeTorque(0f, rotationTorque, 0f, ForceMode.VelocityChange);
             }
         }
 
-        /// <summary>
-        /// Applies the movement acceleration to the vehicle
-        /// </summary>
         protected virtual void ApplyAcceleration()
         {
-
-
-
             if (IsGrounded && CanMove)
             {
                 var force = FinalStats.Acceleration * Input.y;
-
                 Rigidbody.AddForce(transform.forward * force, ForceMode.Acceleration);
             }
-            // Limit the max speed of the vehicle
-            else
-            {
-                Debug.Log("CANT MOVE");
-                Debug.Log($"IsGrounded: {IsGrounded}, CanMove: {CanMove}");
-            }
-
         }
 
-        /// <summary>
-        /// Add all required components automatically, when creating a new vehicle
-        /// </summary>
+        // ---------------------------
+        // Drift Physics
+        // ---------------------------
+        void ApplyDriftPhysics(Vector2 input)
+        {
+            Vector3 planarForward = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
+            float throttle = Mathf.Clamp(input.y, -1f, 1f);
+
+            driftVelocity += planarForward * driftMoveSpeed * throttle * Time.fixedDeltaTime;
+            driftVelocity *= driftDrag;
+            driftVelocity = Vector3.ClampMagnitude(driftVelocity, driftMaxSpeed);
+
+            float magnitude = driftVelocity.magnitude;
+            if (magnitude > 0.0001f)
+            {
+                Vector3 desiredDir = Vector3.Lerp(driftVelocity / magnitude, planarForward, driftTraction * Time.fixedDeltaTime);
+                if (desiredDir.sqrMagnitude > 0.0001f)
+                {
+                    driftVelocity = desiredDir.normalized * magnitude;
+                }
+            }
+
+            float steerInput = Mathf.Clamp(input.x, -1f, 1f);
+            if (Mathf.Abs(steerInput) > 0.01f && driftVelocity.sqrMagnitude > 0.0001f)
+            {
+                float yaw = steerInput * driftVelocity.magnitude * driftSteerAngle * Time.fixedDeltaTime;
+                Rigidbody.MoveRotation(Rigidbody.rotation * Quaternion.Euler(0f, yaw, 0f));
+            }
+
+            float verticalVelocity = Rigidbody.linearVelocity.y;
+            Vector3 planar = driftVelocity;
+            Rigidbody.linearVelocity = new Vector3(planar.x, verticalVelocity, planar.z);
+        }
+
+        bool EvaluateDriftState(Vector2 input)
+        {
+            if (!IsGrounded || !CanMove)
+                return false;
+
+            bool driftPressed = false;
+#if ENABLE_INPUT_SYSTEM
+            CacheHandbrakeAction();
+            if (handbrakeAction != null)
+                driftPressed = handbrakeAction.IsPressed();
+            else if (fallbackToSpacebar && Keyboard.current != null)
+                driftPressed = Keyboard.current.spaceKey.isPressed;
+#else
+            if (fallbackToSpacebar)
+                driftPressed = UnityEngine.Input.GetKey(KeyCode.Space);
+#endif
+
+            if (!driftPressed && fallbackToReverseInput)
+                driftPressed = input.y < -0.25f;
+
+            return driftPressed;
+        }
+
+        void CacheHandbrakeAction()
+        {
+#if ENABLE_INPUT_SYSTEM
+            if (handbrakeAction != null) return;
+            playerInput ??= GetComponent<PlayerInput>();
+            if (playerInput != null && !string.IsNullOrEmpty(handbrakeActionName))
+                handbrakeAction = playerInput.actions?.FindAction(handbrakeActionName, throwIfNotFound: false);
+#endif
+        }
+
+        void SyncDriftVelocityWithRigidbody() =>
+            driftVelocity = GetPlanarVelocity(Rigidbody.linearVelocity);
+
+        static Vector3 GetPlanarVelocity(Vector3 v) =>
+            new Vector3(v.x, 0f, v.z);
+
+        // ---------------------------
+        // Auto setup & Gizmos
+        // ---------------------------
         public void Reset()
         {
-            // Automatically add and setup a rigidbody if none exists
             if (GetComponent<Rigidbody>() == null)
             {
                 var rb = gameObject.AddComponent<Rigidbody>();
-
                 rb.interpolation = RigidbodyInterpolation.None;
                 rb.useGravity = false;
                 rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
@@ -190,20 +237,15 @@ namespace LudumDare58
                 rb.linearDamping = 0.05f;
             }
 
-            // Automatically add a player input if no input source exists
             if (GetComponent<VehicleInputSource>() == null)
             {
                 gameObject.AddComponent<VehiclePlayerInput>();
             }
         }
 
-        /// <summary>
-        /// Draw additional debug info in the scene view when the vehicle is selected
-        /// </summary>
-        private void OnDrawGizmosSelected()
-        {
-            groundDetection.OnDrawGizmosSelected(this);
-        }
+        // private void OnDrawGizmosSelected() =>
+        //     groundDetection.OnDrawGizmosSelected(this);
+
 
         public void ResetUpright()
         {
@@ -215,12 +257,65 @@ namespace LudumDare58
             Quaternion uprightRotation = Quaternion.LookRotation(transform.forward, Vector3.up);
             Rigidbody.MoveRotation(uprightRotation);
 
-            // Optionally lift a little off the ground to avoid clipping
+            // move slightly backwards horizontally, and slightly upwards vertically
+            transform.position -= transform.forward * 2f;
             transform.position += Vector3.up * 1f;
         }
 
-    }
 
+        void CheckFlipAndStuck()
+        {
+
+            // Skip if recently reset
+            if (Time.time - lastResetTime < resetCooldown)
+                return;
+
+            // 1. Check if flipped (dot < threshold)
+            float uprightDot = Vector3.Dot(transform.up, Vector3.up);
+            bool isFlipped = uprightDot < flipDotThreshold;
+
+            // 2. Check if stuck (low speed but grounded with input)
+            bool isSlow = Rigidbody.linearVelocity.magnitude < stuckVelocityThreshold;
+            bool tryingToMove = Input.magnitude > 0.1f;
+            if (IsGrounded && isSlow && tryingToMove)
+                stuckTimer += Time.fixedDeltaTime;
+            else
+                stuckTimer = 0f;
+
+            bool isStuck = stuckTimer > stuckTimeThreshold;
+
+
+            // 3. Auto reset if flipped or stuck
+            if (isFlipped || isStuck)
+            {
+
+                Debug.Log($"[Vehicle] Auto reset ({(isFlipped ? "flipped" : "stuck")}) at time {Time.time:F1}");
+                Debug.Log($"[Vehicle] Not BEING RESET: flipped={isFlipped} (dot={uprightDot:F2}), stuck={isStuck} (vel={Rigidbody.linearVelocity.magnitude:F2}, tryingToMove={tryingToMove}, isGrounded={IsGrounded}, isSlow={isSlow}, inputMag={Input.magnitude:F2}, stuckTimer={stuckTimer:F1})");
+
+                ResetUpright();
+                lastResetTime = Time.time;
+                stuckTimer = 0f;
+            }
+
+            // every few frames provide some reasoning why not resetting
+            if (Time.frameCount % 30 == 0)
+                Debug.Log($"[Vehicle] Not resetting: flipped={isFlipped} (dot={uprightDot:F2}), stuck={isStuck} (vel={Rigidbody.linearVelocity.magnitude:F2}, tryingToMove={tryingToMove}, isGrounded={IsGrounded}, isSlow={isSlow}, inputMag={Input.magnitude:F2}, stuckTimer={stuckTimer:F1})");
+
+
+
+
+        }
+
+
+        private void OnDrawGizmosSelected()
+        {
+            groundDetection.OnDrawGizmosSelected(this);
+        }
+
+
+
+
+    }
     
 
 
