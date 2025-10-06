@@ -4804,6 +4804,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2709624709517295409, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
+      propertyPath: hueShiftSpeed
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 4357519437633950667, guid: 25a452f70e5abfa41a042d556397f778, type: 3}
       propertyPath: m_LocalPosition.x
       value: -47.827774

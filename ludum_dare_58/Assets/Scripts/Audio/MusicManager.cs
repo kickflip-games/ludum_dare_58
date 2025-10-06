@@ -104,7 +104,7 @@ namespace LudumDare58.Audio
 
             // Slow hue rotation for ambience
             if (enableColorPulse && colorAdj != null)
-                colorAdj.hueShift.value = Mathf.Sin(Time.time * hueShiftSpeed) * 30f;
+                colorAdj.hueShift.value = Mathf.Sin(Time.time * hueShiftSpeed) * 180f;
 
             frameCounter++;
             // if (frameCounter % 15 == 0)
